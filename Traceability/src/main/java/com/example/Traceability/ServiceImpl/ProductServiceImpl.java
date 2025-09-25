@@ -65,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
 		entity.setWasteGenerated(productDTO.getWasteGenerated());
 		entity.setProductDescription(productDTO.getProductDescription());
 		entity.setProductTimeStamp(productDTO.getProductTimeStamp());
-		
+		entity.setProductLocation(productDTO.getProductLocation());
 		
 		return modelMapper.map(entity, ProductDTO.class);
 	}

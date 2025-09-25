@@ -33,6 +33,8 @@ private Long productId;
 	
 	private LocalDateTime productTimeStamp;
 	
+	private String productLocation;
+	
 	private String productDescription;
 	
 }

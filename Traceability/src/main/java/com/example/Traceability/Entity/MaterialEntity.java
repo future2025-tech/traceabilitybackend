@@ -50,4 +50,6 @@ public class MaterialEntity {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(nullable = false)
 	private LocalDateTime MaterialEntryTime;
+	
+	private String materialLocation;
 }

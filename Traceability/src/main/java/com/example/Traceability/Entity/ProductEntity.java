@@ -46,6 +46,8 @@ public class ProductEntity {
 	@Column(nullable = false)
 	private LocalDateTime productTimeStamp;
 	
+	private String productLocation;
+	
 	private String productDescription;
 	
 }

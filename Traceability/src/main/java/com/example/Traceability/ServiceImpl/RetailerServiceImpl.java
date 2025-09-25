@@ -64,7 +64,8 @@ public class RetailerServiceImpl implements RetailerService {
         entity.setContactPersonName(retailerDTO.getContactPersonName());
         entity.setContactPersonNumber(retailerDTO.getContactPersonNumber());
         entity.setEventType(retailerDTO.getEventType());
-
+        entity.setRetailerLocation(retailerDTO.getRetailerLocation());
+        
         RetailerEntity updatedEntity = retailerRepo.save(entity);
         
         return modelMapper.map(updatedEntity, RetailerDTO.class);

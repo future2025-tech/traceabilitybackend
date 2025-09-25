@@ -36,5 +36,7 @@ public class MaterialDTO {
 	private String eventType;
 	
 	private LocalDateTime MaterialEntryTime;
+	
+	private String materialLocation;
 
 }

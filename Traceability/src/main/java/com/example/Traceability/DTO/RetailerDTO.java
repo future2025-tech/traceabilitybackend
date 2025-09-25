@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RetailerDTO {
-
-private Long retailerId;
+	
+	private Long retailerId;
 	
 	private String retailerName;
 	
@@ -31,6 +31,8 @@ private Long retailerId;
 	
 	private LocalDateTime timeStamp;
 			
+	private String retailerLocation;
+	
 	private byte[] uploadInvoice;
 	
 }

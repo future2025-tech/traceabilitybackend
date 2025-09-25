@@ -18,11 +18,11 @@ public class EmailServiceImpl  implements EmailService{
     	
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(to);
-        msg.setSubject("Account Created");
+        msg.setSubject("Account Created Successfully...!");
         msg.setText("Welcome! Your account is created.\nEmail: "
         + to + "\nTemp Password: " + tempPassword + 
-        
                     "\nPlease reset your password.");
+        
         mailSender.send(msg);
     }
 

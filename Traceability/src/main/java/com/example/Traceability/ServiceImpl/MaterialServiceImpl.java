@@ -67,6 +67,7 @@ public class MaterialServiceImpl implements MaterialService {
 		entity.setWasteGenerated(materialDTO.getWasteGenerated());
 		entity.setEventType(materialDTO.getEventType());
 		entity.setUnit(materialDTO.getUnit());
+		entity.setMaterialLocation(materialDTO.getMaterialLocation());
 		
 		return modelMapper.map(entity, MaterialDTO.class);
 	}

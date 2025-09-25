@@ -1,18 +1,20 @@
 package com.example.Traceability.Controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Traceability.DTO.EmailRequest;
-import com.example.Traceability.DTO.LoginRequest;
+import com.example.Traceability.DTO.LoginDTO;
 import com.example.Traceability.DTO.PasswordValidator;
 import com.example.Traceability.DTO.ResetPassword;
-import com.example.Traceability.Entity.LoginEntity;
 import com.example.Traceability.Repository.LoginRepository;
 import com.example.Traceability.ServiceImpl.EmailServiceImpl;
 import com.example.Traceability.ServiceImpl.LoginSerivceImpl;
@@ -33,21 +35,16 @@ public class AuthController {
    
 
     @PostMapping("/create-user")
-    public ResponseEntity<String> createUser(@RequestBody LoginRequest req) {
+    public ResponseEntity<String> createUser(@RequestBody EmailRequest req) {
         try {
-            LoginEntity user = userService.createUser(req.getEmail(), req.getPassword());
-            try {
-                emailService.sendWelcomeEmail(user.getEmail(), req.getPassword());
-            } catch (Exception e) {
-                System.err.println("Email send failed: " + e.getMessage());
-            }
-            return ResponseEntity.ok("User created successfully.");
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().body("Create user failed: "
-        + ex.getMessage());
+            userService.createUser(req.getEmail());
+            return ResponseEntity.ok("User created successfully."
+            		+ " Password sent via email.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Create user failed: " 
+        + e.getMessage());
         }
     }
-
 
     @PostMapping("/forgot-password")
     public String requestOtp(@RequestBody EmailRequest emailRequest) {
@@ -97,6 +94,19 @@ public class AuthController {
         emailService.sendAccountDeletedEmail(emailRequest.getEmail());
 
         return "User account deleted successfully";
+    }
+    
+    @GetMapping("/all-users")
+    public ResponseEntity<List<LoginDTO>> getAllUsers() {
+        List<LoginDTO> users = userRepo.findAll().stream()
+                .map(user -> {
+                    LoginDTO dto = new LoginDTO();
+                    dto.setEmail(user.getEmail());
+                    dto.setUserRole(user.getUserRole());
+                    return dto;
+                })
+                .toList();
+        return ResponseEntity.ok(users);
     }
 
 }

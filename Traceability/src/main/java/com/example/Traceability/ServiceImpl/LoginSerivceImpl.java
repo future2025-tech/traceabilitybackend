@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.Traceability.DTO.PasswordGenerator;
 import com.example.Traceability.Entity.LoginEntity;
 import com.example.Traceability.Entity.PasswordHistory;
 import com.example.Traceability.Repository.LoginRepository;
@@ -22,13 +23,16 @@ public class LoginSerivceImpl implements loginService{
 	private final LoginRepository loginRepo;
     private final PasswordHistoryRepository historyRepo;
     private final BCryptPasswordEncoder encoder;
+    private final EmailServiceImpl emailService;
 	    
     @Transactional
-    public LoginEntity createUser(String email, String rawPassword) {
+    public LoginEntity createUser(String email) {
     	
         if (loginRepo.findByEmail(email) != null) {
             throw new IllegalStateException("User with this email already exists");
         }
+
+        String rawPassword = PasswordGenerator.generatePassword(12);
 
         String hashedPassword = encoder.encode(rawPassword);
 
@@ -44,9 +48,10 @@ public class LoginSerivceImpl implements loginService{
         ph.setChangedAt(LocalDateTime.now());
         historyRepo.save(ph);
 
+        emailService.sendWelcomeEmail(email, rawPassword);
+
         return user;
     }
-
 	    
     public boolean isPasswordUsedBefore(String email, String newPassword) {
 	    	
@@ -89,8 +94,7 @@ public class LoginSerivceImpl implements loginService{
         }
 
         loginRepo.delete(user);
-    }
-    
+    }    
 
     public void savePasswordHistory(String email, String newPasswordHash) {
         PasswordHistory history = new PasswordHistory();

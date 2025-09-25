@@ -42,6 +42,8 @@ public class RetailerEntity {
 	
 	@Column(nullable = false)
 	 private LocalDateTime timeStamp;
+	
+	private String retailerLocation;
 			
 	 @Lob
 	 @Column(name = "upload_invoice", columnDefinition = "LONGBLOB")
