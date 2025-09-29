@@ -35,8 +35,11 @@ public class AuthController {
     
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody EmailRequest req) {
+    	
         userService.createUser(req.getEmail());
-        return ResponseEntity.ok("User created successfully. Password sent via email.");
+        
+        return ResponseEntity.ok("User created successfully. "
+        		+ "Password sent via email.");
     }
 
     @PostMapping("/login")
@@ -45,11 +48,13 @@ public class AuthController {
         LoginEntity user = userRepo.findByEmail(loginDTO.getEmail());
 
         if (user == null) {
-            return ResponseEntity.badRequest().body("Invalid email");
+            return ResponseEntity.badRequest().body(
+            		"Invalid email. Please enter Valid Email...!");
         }
 
         if (!encoder.matches(loginDTO.getPassword(), user.getPassword())) {
-            return ResponseEntity.badRequest().body("Invalid password");
+            return ResponseEntity.badRequest().body(
+            		 "Invalid password, Please enter valid Password...!");
         }
 
         String token = jwtUtil.generateToken(user.getEmail());

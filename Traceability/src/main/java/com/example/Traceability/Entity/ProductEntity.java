@@ -1,19 +1,9 @@
 package com.example.Traceability.Entity;
 
 import java.time.LocalDateTime;
-
 import com.example.Traceability.Constant.Category;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Data
@@ -22,32 +12,42 @@ import lombok.NoArgsConstructor;
 @Table(name = "TC_PRODUCT")
 public class ProductEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long productId;
-	
-	private String productName;
-	
-	private Category productCategory;
-	   	
-	private String ProductEvent;
-	
-	private Float co2Emission;
-	
-	private Float waterUsage;
-	
-	private Float energyConsumption;
-	
-	private Float wasteGenerated;
-	
-	private String productEventType;
-	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@Column(nullable = false)
-	private LocalDateTime productTimeStamp;
-	
-	private String productLocation;
-	
-	private String productDescription;
-	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
+    private Long productId;
+
+    @Column(name = "product_name")
+    private String productName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "product_category")
+    private Category productCategory;
+
+    @Column(name = "product_event")
+    private String productEvent;
+
+    @Column(name = "co2emission")
+    private Float co2Emission;
+
+    @Column(name = "water_usage")
+    private Float waterUsage;
+
+    @Column(name = "energy_consumption")
+    private Float energyConsumption;
+
+    @Column(name = "waste_generated")
+    private Float wasteGenerated;
+
+    @Column(name = "product_event_type")
+    private String productEventType;
+
+    @Column(name = "product_time_stamp", nullable = false)
+    private LocalDateTime timeStamp;
+
+    @Column(name = "product_location", nullable = false)
+    private String productLocation;
+
+    @Column(name = "product_description")
+    private String productDescription;
 }

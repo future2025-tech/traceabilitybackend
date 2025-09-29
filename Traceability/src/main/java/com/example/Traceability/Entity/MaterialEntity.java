@@ -47,9 +47,17 @@ public class MaterialEntity {
 	
 	private String eventType;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(nullable = false)
 	private LocalDateTime MaterialEntryTime;
 	
+	@Column(nullable = false)
 	private String materialLocation;
+	
+	@Column(nullable = false)
+	private String selectProduct;
+	
+	public String getSelectProduct() {
+	    return selectProduct;
+	}
 }

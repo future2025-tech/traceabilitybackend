@@ -38,5 +38,7 @@ public class MaterialDTO {
 	private LocalDateTime MaterialEntryTime;
 	
 	private String materialLocation;
+	
+	private String selectProduct;
 
 }

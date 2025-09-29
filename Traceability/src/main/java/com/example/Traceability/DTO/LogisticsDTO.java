@@ -32,5 +32,7 @@ public class LogisticsDTO {
 	
 	private String eventType;
 	
+    private String selectProduct;
+
 	private LocalDateTime timeStamp;
 }

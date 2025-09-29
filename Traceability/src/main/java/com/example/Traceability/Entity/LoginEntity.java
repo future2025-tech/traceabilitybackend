@@ -28,6 +28,7 @@ public class LoginEntity {
 	    name = "user-id-generator",
 	    strategy = "com.example.Traceability.Util.UserIdGenerator"
 	)
+	@Column(nullable = false, unique = true)
 	private String id;
 
 	

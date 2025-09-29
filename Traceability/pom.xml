@@ -52,6 +52,11 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+    <groupId>com.fasterxml.jackson.datatype</groupId>
+    <artifactId>jackson-datatype-jsr310</artifactId>
+    <version>2.15.2</version>
+</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
@@ -61,6 +66,22 @@
     <groupId>org.modelmapper</groupId>
     <artifactId>modelmapper</artifactId>
     <version>3.2.0</version>
+</dependency>
+<dependency>
+  <groupId>com.google.zxing</groupId>
+  <artifactId>core</artifactId>
+  <version>3.5.2</version>
+</dependency>
+<dependency>
+  <groupId>com.google.zxing</groupId>
+  <artifactId>javase</artifactId>
+  <version>3.5.2</version>
+</dependency>
+
+<!-- Jackson (likely already present, but ensure it is) -->
+<dependency>
+  <groupId>com.fasterxml.jackson.core</groupId>
+  <artifactId>jackson-databind</artifactId>
 </dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

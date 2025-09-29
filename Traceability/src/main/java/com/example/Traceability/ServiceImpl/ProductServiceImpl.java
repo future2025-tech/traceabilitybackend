@@ -26,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		ProductEntity entity = modelMapper.map(productDTO, ProductEntity.class);
 		
-		entity.setProductTimeStamp(LocalDateTime.now().withNano(0));
+		entity.setTimeStamp(LocalDateTime.now().withNano(0));
 		
 		ProductEntity savedEntity = productRepository.save(entity);
 			
@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
 		entity.setWaterUsage(productDTO.getWaterUsage());
 		entity.setWasteGenerated(productDTO.getWasteGenerated());
 		entity.setProductDescription(productDTO.getProductDescription());
-		entity.setProductTimeStamp(productDTO.getProductTimeStamp());
+		entity.setTimeStamp(productDTO.getTimeStamp());
 		entity.setProductLocation(productDTO.getProductLocation());
 		
 		return modelMapper.map(entity, ProductDTO.class);

@@ -2,6 +2,8 @@ package com.example.Traceability.Entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,13 +42,20 @@ public class RetailerEntity {
 	
 	private String eventType;
 	
-	@Column(nullable = false)
-	 private LocalDateTime timeStamp;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@Column(name = "time_stamp", nullable = false)
+	private LocalDateTime timeStamp;
 	
+	@Column(nullable = false)
 	private String retailerLocation;
 			
 	 @Lob
 	 @Column(name = "upload_invoice", columnDefinition = "LONGBLOB")
 	 private byte[] uploadInvoice;
+	 
+	 public String getSelectProduct() {
+		    return selectProduct;
+		}
+
 
 }

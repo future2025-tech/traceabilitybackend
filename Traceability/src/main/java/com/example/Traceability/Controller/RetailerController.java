@@ -22,7 +22,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/retailer")
 @AllArgsConstructor
-public class RetialerController {
+public class RetailerController {
 
 	private final RetailerServiceImpl retailerService;
 	
