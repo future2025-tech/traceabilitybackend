@@ -12,10 +12,14 @@ import lombok.NoArgsConstructor;
 public class TraceabilityDTO {
 
     private ProductDTO product;
+    
     private List<MaterialDTO> rawMaterials;
+    
     private List<LogisticsDTO> logistics;
+    
     private List<RetailerDTO> retailers;
 
     private String recyclingProcedure;
+    
     private LocalDateTime lastUpdated;
 }

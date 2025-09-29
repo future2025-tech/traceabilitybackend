@@ -10,7 +10,12 @@ import java.util.List;
 @Repository
 public interface ApprovalRepository extends JpaRepository<ApprovalEntity, Long> {
 	
-    Optional<ApprovalEntity> findByProductId(Long productId);
-    
+	// If you want multiple approvals for the same product
+    List<ApprovalEntity> findAllByProductId(Long productId);
+
+    // If only one approval per product is allowed
+    Optional<ApprovalEntity> findFirstByProductIdOrderByReviewedAtDesc(Long productId);
+
+    // Optionally, find pending approvals
     List<ApprovalEntity> findByStatus(String status);
 }

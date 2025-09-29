@@ -23,6 +23,7 @@ import com.example.Traceability.Repository.LogisticsRepository;
 import com.example.Traceability.Repository.MaterialRepository;
 import com.example.Traceability.Repository.ProductRepository;
 import com.example.Traceability.Repository.RetailerRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,10 +38,9 @@ public class ApprovalServiceImpl {
     private final LogisticsRepository logisticsRepo;
     private final RetailerRepository retailerRepo;
     private final ModelMapper modelMapper;
+    private final ObjectMapper objectMapper; // ✅ Use Spring-configured ObjectMapper
 
-    /**
-     * Creates a new approval request for a product.
-     */
+    // Request approval
     public ApprovalEntity requestApproval(Long productId, String requestedBy) {
         productRepo.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
@@ -54,12 +54,8 @@ public class ApprovalServiceImpl {
         return approvalRepo.save(approval);
     }
 
-    /**
-     * Reviews an approval request.
-     */
-    public ApprovalEntity reviewApproval(Long approvalId, boolean approve,
-                                         String adminUser, String remarks) throws Exception {
-
+    // Review approval and generate QR
+    public ApprovalEntity reviewApproval(Long approvalId, boolean approve, String adminUser, String remarks) throws Exception {
         ApprovalEntity approval = approvalRepo.findById(approvalId)
                 .orElseThrow(() -> new IllegalArgumentException("Approval not found: " + approvalId));
 
@@ -73,38 +69,14 @@ public class ApprovalServiceImpl {
         }
 
         Long productId = approval.getProductId();
-
         if (!isTraceComplete(productId)) {
             throw new IllegalStateException("Traceability incomplete for product: " + productId);
         }
 
-        TraceabilityDTO dto = buildTraceabilityDTO(productId);
+        // Build DTOs
+        TraceabilityDTO dto = new TraceabilityDTO();
 
-        // Generate QR code and mark approval as approved
-        String qrBase64 = qrCodeService.generateQRCodeBase64(dto);
-        approval.setQrBase64(qrBase64);
-        approval.setStatus("APPROVED");
-
-        return approvalRepo.save(approval);
-    }
-
-    /**
-     * Checks if a product's traceability is complete.
-     */
-    public boolean isTraceComplete(Long productId) {
-        return productRepo.existsById(productId)
-                && !safeFindMaterialsByProductId(productId).isEmpty()
-                && !safeFindLogisticsByProductId(productId).isEmpty()
-                && !safeFindAllRetailersByProductId(productId).isEmpty();
-    }
-
-    /**
-     * Builds a TraceabilityDTO from productId.
-     */
-    private TraceabilityDTO buildTraceabilityDTO(Long productId) {
-        ProductEntity product = productRepo.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
-
+        ProductEntity product = productRepo.findById(productId).get();
         List<MaterialEntity> materials = safeFindMaterialsByProductId(productId);
         List<LogisticsEntity> logistics = safeFindLogisticsByProductId(productId);
         List<RetailerEntity> retailers = safeFindAllRetailersByProductId(productId);
@@ -120,7 +92,6 @@ public class ApprovalServiceImpl {
                 .map(r -> modelMapper.map(r, RetailerDTO.class))
                 .collect(Collectors.toList());
 
-        TraceabilityDTO dto = new TraceabilityDTO();
         dto.setProduct(productDTO);
         dto.setRawMaterials(materialDTOs);
         dto.setLogistics(logisticsDTOs);
@@ -128,12 +99,28 @@ public class ApprovalServiceImpl {
         dto.setRecyclingProcedure("Return to authorized recycling center");
         dto.setLastUpdated(LocalDateTime.now());
 
-        return dto;
+        // ✅ Use ObjectMapper to serialize DTO to JSON for QR code
+        String dtoJson = objectMapper.writeValueAsString(dto);
+        String qrBase64 = qrCodeService.generateQRCodeBase64(dtoJson);
+        approval.setQrBase64(qrBase64);
+        approval.setStatus("APPROVED");
+
+        return approvalRepo.save(approval);
     }
 
-    /**
-     * Utility methods to fetch entities safely.
-     */
+    public boolean isTraceComplete(Long productId) {
+        return productRepo.existsById(productId)
+                && !safeFindMaterialsByProductId(productId).isEmpty()
+                && !safeFindLogisticsByProductId(productId).isEmpty()
+                && !safeFindAllRetailersByProductId(productId).isEmpty();
+    }
+
+    private List<RetailerEntity> safeFindAllRetailersByProductId(Long productId) {
+        return retailerRepo.findAll().stream()
+                .filter(r -> productId.toString().equals(r.getSelectProduct()))
+                .toList();
+    }
+
     private List<MaterialEntity> safeFindMaterialsByProductId(Long productId) {
         return materialRepo.findAll().stream()
                 .filter(m -> productId.toString().equals(m.getSelectProduct()))
@@ -146,15 +133,6 @@ public class ApprovalServiceImpl {
                 .toList();
     }
 
-    private List<RetailerEntity> safeFindAllRetailersByProductId(Long productId) {
-        return retailerRepo.findAll().stream()
-                .filter(r -> productId.toString().equals(r.getSelectProduct()))
-                .toList();
-    }
-
-    /**
-     * Queries
-     */
     public List<ApprovalEntity> findPendingApprovals() {
         return approvalRepo.findByStatus("PENDING");
     }
